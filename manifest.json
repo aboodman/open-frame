@@ -1,8 +1,7 @@
 {
-  "name": "~pkasting",
-  "description": "Inverts pkasting by adding a context menu to open frames in a new tab or window.",
-  "version": "1",
+  "name": "Open Frame",
+  "description": "Adds context menu items to open a frame in a new tab, new window, or incognito window.",
+  "version": "2",
   "permissions": ["contextMenus", "tabs"],
-  "background_page": "background.html",
-  "icons": { "128": "128.png" }
+  "background_page": "background.html"
 }

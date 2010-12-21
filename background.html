@@ -1,16 +1,16 @@
 <script>
 chrome.contextMenus.create({
-  "title": "Open in new tab",
+  "title": "Open frame in new tab",
   "onclick": function(clickData) { openFrame(clickData, "tab") }
 });
 
 chrome.contextMenus.create({
-  "title": "Open in new window",
+  "title": "Open frame in new window",
   "onclick": function(clickData) { openFrame(clickData, "window") }
 });
 
 chrome.contextMenus.create({
-  "title": "Open in incognito window",
+  "title": "Open frame in incognito window",
   "onclick": function(clickData) { openFrame(clickData, "incognito") }
 });
 
