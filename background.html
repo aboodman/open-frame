@@ -1,23 +1,30 @@
 <script>
 chrome.contextMenus.create({
+  "title": "Open frame in this tab",
+  "onclick": function(clickData, tab) { openFrame(clickData, tab, "this-tab") }
+});
+
+chrome.contextMenus.create({
   "title": "Open frame in new tab",
-  "onclick": function(clickData) { openFrame(clickData, "tab") }
+  "onclick": function(clickData, tab) { openFrame(clickData, tab, "new-tab") }
 });
 
 chrome.contextMenus.create({
   "title": "Open frame in new window",
-  "onclick": function(clickData) { openFrame(clickData, "window") }
+  "onclick": function(clickData, tab) { openFrame(clickData, tab, "window") }
 });
 
 chrome.contextMenus.create({
   "title": "Open frame in incognito window",
-  "onclick": function(clickData) { openFrame(clickData, "incognito") }
+  "onclick": function(clickData, tab) { openFrame(clickData, tab, "incognito") }
 });
 
-function openFrame(clickData, container) {
+function openFrame(clickData, tab, container) {
   var url = clickData.frameUrl || clickData.pageUrl;
 
-  if (container == "tab")
+  if (container == "this-tab")
+    chrome.tabs.update(tab.id, {url:url});
+  else if (container == "new-tab")
     chrome.tabs.create({url:url});
   else if (container == "window")
     chrome.windows.create({url:url});
