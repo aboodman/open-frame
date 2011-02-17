@@ -1,34 +1,31 @@
 <script>
 chrome.contextMenus.create({
   "title": "Open frame in this tab",
-  "onclick": function(clickData, tab) { openFrame(clickData, tab, "this-tab") }
+  "onclick": function(clickData, tab) {
+    chrome.tabs.update(tab.id, {url: getURL(clickData)});
+  }
 });
 
 chrome.contextMenus.create({
   "title": "Open frame in new tab",
-  "onclick": function(clickData, tab) { openFrame(clickData, tab, "new-tab") }
+  "onclick": function(clickData) {
+    chrome.tabs.create({url: getURL(clickData)});
+  }
 });
 
 chrome.contextMenus.create({
   "title": "Open frame in new window",
-  "onclick": function(clickData, tab) { openFrame(clickData, tab, "window") }
+  "onclick": function(clickData) {
+    chrome.windows.create({url: getURL(clickData)});
+  }
 });
 
 chrome.contextMenus.create({
   "title": "Open frame in incognito window",
-  "onclick": function(clickData, tab) { openFrame(clickData, tab, "incognito") }
+  "onclick": function(clickData) {
+    chrome.windows.create({url: getURL(clickData), incognito: true});
+  }
 });
 
-function openFrame(clickData, tab, container) {
-  var url = clickData.frameUrl || clickData.pageUrl;
-
-  if (container == "this-tab")
-    chrome.tabs.update(tab.id, {url:url});
-  else if (container == "new-tab")
-    chrome.tabs.create({url:url});
-  else if (container == "window")
-    chrome.windows.create({url:url});
-  else if (container == "incognito")
-    chrome.windows.create({url:url, incognito:true});
-}
+function getURL(clickData) { return clickData.frameUrl || clickData.pageUrl }
 </script>
