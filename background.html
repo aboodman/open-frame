@@ -1,33 +1,96 @@
 <script>
-chrome.contextMenus.create({
-  "title": "Open frame in this tab",
-  "onclick": function(clickData, tab) {
-    chrome.tabs.update(tab.id, {url: getURL(clickData)});
-  }
-});
 
-chrome.contextMenus.create({
-  "title": "Open frame in new tab",
-  "onclick": function(clickData) {
-    chrome.tabs.create({url: getURL(clickData)});
-  }
-});
+function setDefaults() {
+  //determine default values in a single place, called on start.
+  setBoolOption("checkthistab", getBoolOption("checkthistab", true));
+  setBoolOption("checknewtab", getBoolOption("checknewtab", true));
+  setBoolOption("checknewwindow", getBoolOption("checknewwindow", true));
+  setBoolOption("checkincognitowindow", getBoolOption("checkincognitowindow", true));
+}
 
-chrome.contextMenus.create({
-  "title": "Open frame in new window",
-  "onclick": function(clickData) {
-    chrome.windows.create({url: getURL(clickData)});
-  }
-});
+function createContextMenus() {
 
-chrome.contextMenus.create({
-  "title": "Open frame in incognito window",
-  "onclick": function(clickData) {
-    chrome.windows.create({url: getURL(clickData), incognito: true});
+  if (getBoolOption("checkthistab")) {
+    chrome.contextMenus.create({
+      "title": "Open frame in this tab",
+      "onclick": function(clickData, tab) {
+        chrome.tabs.update(tab.id, {url: getURL(clickData)});
+      }
+    });
   }
-});
+  
+  if (getBoolOption("checknewtab")) {
+    chrome.contextMenus.create({
+      "title": "Open frame in new tab",
+      "onclick": function(clickData) {
+        chrome.tabs.create({url: getURL(clickData)});
+      }
+    });
+  }
+  
+  if (getBoolOption("checknewwindow")) {
+    chrome.contextMenus.create({
+      "title": "Open frame in new window",
+      "onclick": function(clickData) {
+        chrome.windows.create({url: getURL(clickData)});
+      }
+    });
+  }
+  
+  if (getBoolOption("checkincognitowindow")) {
+    chrome.contextMenus.create({
+      "title": "Open frame in incognito window",
+      "onclick": function(clickData) {
+        chrome.windows.create({url: getURL(clickData), incognito: true});
+      }
+    });
+  }
+}
 
+function removeContextMenus() {
+  chrome.contextMenus.removeAll();
+}
+  
 function getURL(clickData) {
   return clickData.frameUrl || clickData.pageUrl
 }
+
+function getBoolOption(optionName, defaultValue) {
+  var tentativeValue = localStorage[optionName];
+  if (tentativeValue === 'true')
+    return true;
+  else if (tentativeValue == undefined)
+    return defaultValue;
+  else
+    return false;
+}
+
+function setBoolOption(optionName, newValue) {
+  localStorage[optionName] = newValue;
+}
+
+//actually start:
+setDefaults();
+createContextMenus();
+
+//set up messaging for options page:
+chrome.extension.onRequest.addListener(
+  function(request, sender, sendResponse) {
+    switch(request.action){
+      case "getbool":
+        sendResponse({optionValue: getBoolOption(request.optionName)});
+        break;
+      case "setbool":
+        setBoolOption(request.optionName, request.optionValue)
+		//also update current context menus
+		removeContextMenus();
+		createContextMenus();
+        sendResponse({}); //no real response
+        break;
+      default:
+        sendResponse({}); //ignore the request.
+        break;
+    }
+  });
+
 </script>

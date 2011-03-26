@@ -1,7 +1,8 @@
 {
   "name": "Open Frame",
   "description": "Adds context menu items to open a frame in the current tab, a new tab, new window, or incognito window.",
-  "version": "4",
+  "version": "5",
   "permissions": ["contextMenus", "tabs"],
-  "background_page": "background.html"
+  "background_page": "background.html",
+  "options_page": "options.html"
 }

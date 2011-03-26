@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>Open Frame Options</title>
+<script>
+
+function OpenFrameLoadOptions () {
+  OpenFrameLoadCheckboxSetting("checkthistab");
+  OpenFrameLoadCheckboxSetting("checknewtab");
+  OpenFrameLoadCheckboxSetting("checknewwindow");
+  OpenFrameLoadCheckboxSetting("checkincognitowindow");
+}
+
+function OpenFrameLoadCheckboxSetting (optionName) {
+  chrome.extension.sendRequest({action: "getbool", optionName: optionName}, function(response) {
+    document.forms[0][optionName].checked = response.optionValue;
+  });
+}
+
+function OpenFrameSaveCheckboxSetting (optionName) {
+  chrome.extension.sendRequest({
+    action: "setbool", 
+    optionName: optionName, 
+    optionValue: document.forms[0][optionName].checked
+  });
+}
+
+</script>
+</head>
+<body 
+  onload="OpenFrameLoadOptions();"
+  >
+<form 
+  onsubmit="OpenFrameSaveOptions();"
+  >
+Show the following options:<br>
+<input 
+  type="checkbox" 
+  name="checkthistab" 
+  id="checkthistab" 
+  onclick="OpenFrameSaveCheckboxSetting(this.name);"
+  > Open frame in this tab<br>
+<input 
+  type="checkbox" 
+  name="checknewtab" 
+  id="checknewtab" 
+  onclick="OpenFrameSaveCheckboxSetting(this.name);"
+  > Open frame in new tab<br>
+<input 
+  type="checkbox" 
+  name="checknewwindow" 
+  id="checknewwindow" 
+  onclick="OpenFrameSaveCheckboxSetting(this.name)";
+  > Open frame in new window<br>
+<input 
+  type="checkbox" 
+  name="checkincognitowindow" 
+  id="checkincognitowindow" 
+  onclick="OpenFrameSaveCheckboxSetting(this.name);"
+  > Open frame in incognito window<br>
+</form>
+</body>
+</html>
