@@ -1,6 +1,7 @@
 <script>
 chrome.contextMenus.create({
   "title": "Open frame in this tab",
+  "contexts": ["frame"],
   "onclick": function(clickData, tab) {
     chrome.tabs.update(tab.id, {url: getURL(clickData)});
   }
@@ -8,6 +9,7 @@ chrome.contextMenus.create({
 
 chrome.contextMenus.create({
   "title": "Open frame in new tab",
+  "contexts": ["frame"],
   "onclick": function(clickData) {
     chrome.tabs.create({url: getURL(clickData)});
   }
@@ -15,6 +17,7 @@ chrome.contextMenus.create({
 
 chrome.contextMenus.create({
   "title": "Open frame in new window",
+  "contexts": ["frame"],
   "onclick": function(clickData) {
     chrome.windows.create({url: getURL(clickData)});
   }
@@ -22,6 +25,7 @@ chrome.contextMenus.create({
 
 chrome.contextMenus.create({
   "title": "Open frame in incognito window",
+  "contexts": ["frame"],
   "onclick": function(clickData) {
     chrome.windows.create({url: getURL(clickData), incognito: true});
   }
