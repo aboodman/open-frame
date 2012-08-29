@@ -13,6 +13,7 @@ function createContextMenus() {
   if (getBoolOption("checkthistab")) {
     chrome.contextMenus.create({
       "title": "Open frame in this tab",
+      "contexts": ["frame"],
       "onclick": function(clickData, tab) {
         chrome.tabs.update(tab.id, {url: getURL(clickData)});
       }
@@ -22,6 +23,7 @@ function createContextMenus() {
   if (getBoolOption("checknewtab")) {
     chrome.contextMenus.create({
       "title": "Open frame in new tab",
+      "contexts": ["frame"],
       "onclick": function(clickData) {
         chrome.tabs.create({url: getURL(clickData)});
       }
@@ -31,6 +33,7 @@ function createContextMenus() {
   if (getBoolOption("checknewwindow")) {
     chrome.contextMenus.create({
       "title": "Open frame in new window",
+      "contexts": ["frame"],
       "onclick": function(clickData) {
         chrome.windows.create({url: getURL(clickData)});
       }
@@ -40,6 +43,7 @@ function createContextMenus() {
   if (getBoolOption("checkincognitowindow")) {
     chrome.contextMenus.create({
       "title": "Open frame in incognito window",
+      "contexts": ["frame"],
       "onclick": function(clickData) {
         chrome.windows.create({url: getURL(clickData), incognito: true});
       }
@@ -82,9 +86,9 @@ chrome.extension.onRequest.addListener(
         break;
       case "setbool":
         setBoolOption(request.optionName, request.optionValue)
-		//also update current context menus
-		removeContextMenus();
-		createContextMenus();
+        //also update current context menus
+        removeContextMenus();
+        createContextMenus();
         sendResponse({}); //no real response
         break;
       default:
