@@ -1,35 +1,46 @@
-chrome.contextMenus.create({
-  "title": "Open frame in this tab",
-  "contexts": ["frame"],
-  "onclick": function(clickData, tab) {
-    chrome.tabs.update(tab.id, {url: getURL(clickData)});
-  }
-});
+var COMMANDS = {
+  'open-this-tab': {
+    label: 'In this tab',
+    handler: function(url, tab) {
+      chrome.tabs.update(tab.id, {url: url});
+    }
+  },
 
-chrome.contextMenus.create({
-  "title": "Open frame in new tab",
-  "contexts": ["frame"],
-  "onclick": function(clickData) {
-    chrome.tabs.create({url: getURL(clickData)});
-  }
-});
+  'open-new-tab': {
+    label: 'In a new tab',
+    handler: function(url, tab) {
+      chrome.tabs.create({url: url});
+    }
+  },
 
-chrome.contextMenus.create({
-  "title": "Open frame in new window",
-  "contexts": ["frame"],
-  "onclick": function(clickData) {
-    chrome.windows.create({url: getURL(clickData)});
-  }
-});
+  'open-new-window': {
+    label: 'In a new window',
+    handler: function(url, tab) {
+      chrome.windows.create({url: url});
+    }
+  },
 
-chrome.contextMenus.create({
-  "title": "Open frame in incognito window",
-  "contexts": ["frame"],
-  "onclick": function(clickData) {
-    chrome.windows.create({url: getURL(clickData), incognito: true});
+  'open-new-incognito-window': {
+    label: 'In a new incognito window',
+    handler: function(url, tab) {
+      chrome.windows.create({url: url, incognito: true});
+    }
   }
-});
-
-function getURL(clickData) {
-  return clickData.frameUrl || clickData.pageUrl
 }
+
+chrome.runtime.onInstalled.addListener(function() {
+  for (var commandId in COMMANDS) {
+    chrome.contextMenus.create({
+      title: COMMANDS[commandId].label,
+      contexts: ['frame'],
+      id: commandId
+    });
+  }
+});
+
+chrome.contextMenus.onClicked.addListener(function(clickData, tab) {
+  var url = clickData.frameUrl || clickData.pageUrl;
+  var handler = COMMANDS[clickData.menuItemId].handler;
+
+  handler(url);
+});
