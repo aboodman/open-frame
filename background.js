@@ -25,13 +25,39 @@ var COMMANDS = {
     handler: function(url, tab) {
       chrome.windows.create({url: url, incognito: true});
     }
+  },
+
+  'copy-url': {
+    label: 'Copy frame URL',
+    handler: function(url, tab) {
+      var bufferNode = document.createElement('textarea');
+      document.body.appendChild(bufferNode);
+      bufferNode.value = url;
+      bufferNode.focus();
+      bufferNode.selectionStart = 0;
+      bufferNode.selectionEnd = url.length;
+      document.execCommand('copy');
+      document.body.removeChild(bufferNode);
+    },
+    insertSeparatorBefore: true
   }
 }
 
 chrome.runtime.onInstalled.addListener(function() {
   for (var commandId in COMMANDS) {
+    var command = COMMANDS[commandId];
+
+    if (command.insertSeparatorBefore) {
+      chrome.contextMenus.create({
+        type: 'separator',
+        contexts: ['frame'],
+        // ID should not be required (http://crbug.com/154644)
+        id: commandId + '-separator'
+      });
+    }
+
     chrome.contextMenus.create({
-      title: COMMANDS[commandId].label,
+      title: command.label,
       contexts: ['frame'],
       id: commandId
     });

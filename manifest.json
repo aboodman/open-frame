@@ -3,7 +3,11 @@
   "manifest_version": 2,
   "description": "Adds context menu items to open a frame in the current tab, a new tab, new window, or incognito window.",
   "version": "6",
-  "permissions": ["contextMenus", "tabs"],
+  "permissions": [
+    "clipboardWrite",
+    "contextMenus",
+    "tabs"
+  ],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
