@@ -1,4 +1,3 @@
-<script>
 chrome.contextMenus.create({
   "title": "Open frame in this tab",
   "contexts": ["frame"],
@@ -34,4 +33,3 @@ chrome.contextMenus.create({
 function getURL(clickData) {
   return clickData.frameUrl || clickData.pageUrl
 }
-</script>
