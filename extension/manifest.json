@@ -5,8 +5,7 @@
   "version": "6",
   "permissions": [
     "clipboardWrite",
-    "contextMenus",
-    "tabs"
+    "contextMenus"
   ],
   "background": {
     "scripts": ["background.js"],
