@@ -68,5 +68,5 @@ chrome.contextMenus.onClicked.addListener(function(clickData, tab) {
   var url = clickData.frameUrl || clickData.pageUrl;
   var handler = COMMANDS[clickData.menuItemId].handler;
 
-  handler(url);
+  handler(url, tab);
 });
